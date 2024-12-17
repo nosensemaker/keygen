@@ -1,0 +1,36 @@
+---
+- name: Deploy Gitlab ssh key
+  hosts: all
+  become: yes
+  vars:
+    gitlab_api_token: "token"
+    gitlab_api_url: "https://gitlab.com/api/v4/user/keys"
+  tasks:
+    - name: Procurando public-key no GITLAB
+      ansible.builtin.uri:
+        url: "{{ gitlab_api_url }}"
+        method: GET
+        headers:
+          PRIVATE-TOKEN: "{{ gitlab_api_token }}"
+        return_content: yes
+      register: gitlab_keys_response
+
+    - name: Pegando a public-key no GITLAB
+      ansible.builtin.set_fact:
+        gitlab_ssh_key: "{{ gitlab_keys_response.json[0].key }}"
+
+    - name: Verificando se existe o diretorio ".SSH"
+      ansible.builtin.file:
+        path: /home/mrx/.ssh
+        state: directory
+        mode: '0700'
+        owner: 'mrx'
+        group: 'mrx'
+
+    - name: Adicionando a public-key ao Authorized_keys dos Servidores
+      ansible.builtin.copy:
+        content: "{{ gitlab_ssh_key }}"
+        dest: /home/mrx/.ssh/authorized_keys
+        mode: '0600'
+        owner: "mrx"
+        group: "mrx"
