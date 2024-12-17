@@ -1,0 +1,8 @@
+como configurar o gitlab para receber e destribuir a keygen
+
+1. vai em SSH keys e coloque as informações da chave SSH
+2. vai em personal acess token e crie um token que consiga acessar, ler a API
+3. o playbook vai procurar a public key das chaves registradas do gitlab, para verificar:
+        https:gitlab.com/api/v4/user/keys
+4. para verificar se o token e a chave vão funcionar.
+        $ curl --header "PRIVATE-TOKEN: <token>" "https://gitlab.com/api/v4/user/keys"
