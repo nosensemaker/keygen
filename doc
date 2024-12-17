@@ -6,3 +6,7 @@ como configurar o gitlab para receber e destribuir a keygen
         https:gitlab.com/api/v4/user/keys
 4. para verificar se o token e a chave vão funcionar.
         $ curl --header "PRIVATE-TOKEN: <token>" "https://gitlab.com/api/v4/user/keys"
+5. para testar a conexao com o Gitlab
+        $ ssh -T git@gitlab.com
+ # se pedir senha: vai adicionar a chave direto no agente ssh
+        $ ssh-add ~/.ssh/chave
